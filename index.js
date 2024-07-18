@@ -1,16 +1,23 @@
 import inquirer from 'inquirer';
-// var qr = require('qr-image');
 import qr from 'qr-image';
 import fs from "fs" ;
+
 inquirer
   .prompt([
-   {url:"enter your url" , name:"url"}
+   {message:"enter your url" , 
+   name:"URL"}
   ])
   .then((answers) => {
  const url = answers.URL;
- var qr_svg = qr.image('I love QR!');
- qr_svg.pipe(fs.createWriteStream('i_love_qr.svg'));
+ var qr_svg = qr.image(url);
+ qr_svg.pipe(fs.createWriteStream('qr_img.png'));
+
+ fs.writeFile('URL.txt', url, (err) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  });
   })
+  
   .catch((error) => {
     if (error.isTtyError) {
       // Prompt couldn't be rendered in the current environment
